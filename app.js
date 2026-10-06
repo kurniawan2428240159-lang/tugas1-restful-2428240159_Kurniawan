@@ -24,12 +24,20 @@ app.get('/', (req, res) => {
 });
 
 app.get('/skincare-products', (req, res) => {
-    const { jenisKulit } = req.query;
-    if (jenisKulit) {
-        const filtered = skincareProducts.filter(p => p.jenisKulit.toLowerCase() === jenisKulit.toLowerCase());
-        return res.json(filtered);
-    }
-    res.json(skincareProducts);
+  let { jenisKulit, nama } = req.query;
+  let hasil = skincareProducts;
+  if (jenisKulit) {
+    hasil = hasil.filter(p => p.jenisKulit.toLowerCase() === jenisKulit.toLowerCase());
+  }
+  if (nama) {
+    hasil = hasil.filter(p => p.nama.toLowerCase().includes(nama.toLowerCase()));
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Data produk skincare berhasil diambil",
+    data: hasil
+  });
 });
 
 app.get('/skincare-products/:id', (req, res) => {
