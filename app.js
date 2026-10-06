@@ -24,20 +24,20 @@ app.get('/', (req, res) => {
 });
 
 app.get('/skincare-products', (req, res) => {
-  let { jenisKulit, nama } = req.query;
-  let hasil = skincareProducts;
-  if (jenisKulit) {
-    hasil = hasil.filter(p => p.jenisKulit.toLowerCase() === jenisKulit.toLowerCase());
-  }
-  if (nama) {
-    hasil = hasil.filter(p => p.nama.toLowerCase().includes(nama.toLowerCase()));
-  }
+    let { jenisKulit, nama } = req.query;
+    let hasil = skincareProducts;
+    if (jenisKulit) {
+        hasil = hasil.filter(p => p.jenisKulit.toLowerCase() === jenisKulit.toLowerCase());
+    }
+    if (nama) {
+        hasil = hasil.filter(p => p.nama.toLowerCase().includes(nama.toLowerCase()));
+    }
 
-  res.status(200).json({
-    status: "success",
-    message: "Data produk skincare berhasil diambil",
-    data: hasil
-  });
+    res.status(200).json({
+        status: "success",
+        message: "Data produk skincare berhasil diambil",
+        data: hasil
+    });
 });
 
 app.get('/skincare-products/:id', (req, res) => {
@@ -72,56 +72,53 @@ app.post('/skincare-products', (req, res) => {
     });
 });
 
-app.put('/skincare-products/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const index = skincareProducts.findIndex(p => p.id === id);
-  if (index === -1) {
-    return res.status(404).json({
-      status: "error",
-      message: `Data dengan id ${id} tidak ditemukan`,
-      data: null
+
+app.get('/skincare-products/stats', (req, res) => {
+    const totalProduk = skincareProducts.length;
+    const totalHarga = skincareProducts.reduce((acc, p) => acc + p.harga, 0);
+    const rataRataHarga = totalProduk > 0 ? totalHarga / totalProduk : 0;
+    const perJenisKulit = {
+        normal: skincareProducts.filter(p => p.jenisKulit === 'normal').length,
+        kering: skincareProducts.filter(p => p.jenisKulit === 'kering').length,
+        berminyak: skincareProducts.filter(p => p.jenisKulit === 'berminyak').length,
+        sensitif: skincareProducts.filter(p => p.jenisKulit === 'sensitif').length
+    };
+
+    res.status(200).json({
+        status: "success",
+        message: "Statistik data produk berhasil didapatkan",
+        data: {
+            totalProduk,
+            rataRataHarga,
+            perJenisKulit
+        }
     });
-  }
-  const { nama, merek, jenisKulit, harga, nomorBpom } = req.body;
-  if (!nama || !merek || !jenisKulit || !harga || !nomorBpom) {
-    return res.status(400).json({
-      status: "error",
-      message: "Field nama, merek, jenisKulit, harga, dan nomorBpom wajib diisi",
-      data: null
-    });
-  }
-  skincareProducts[index] = { id, nama, merek, jenisKulit, harga, nomorBpom };
-  res.status(200).json({
-    status: "success",
-    message: "Data berhasil diperbarui",
-    data: skincareProducts[index]
-  });
 });
 
 app.delete('/skincare-products/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const index = skincareProducts.findIndex(p => p.id === id);
-  if (index === -1) {
-    return res.status(404).json({
-      status: "error",
-      message: `Data dengan id ${id} tidak ditemukan`,
-      data: null
+    const id = parseInt(req.params.id);
+    const index = skincareProducts.findIndex(p => p.id === id);
+    if (index === -1) {
+        return res.status(404).json({
+            status: "error",
+            message: `Data dengan id ${id} tidak ditemukan`,
+            data: null
+        });
+    }
+    skincareProducts.splice(index, 1);
+    res.status(200).json({
+        status: "success",
+        message: `Data skincare dengan id ${id} berhasil dihapus`,
+        data: null
     });
-  }
-  skincareProducts.splice(index, 1);
-  res.status(200).json({
-    status: "success",
-    message: `Data skincare dengan id ${id} berhasil dihapus`,
-    data: null
-  });
 });
 
 app.use((req, res) => {
-  res.status(404).json({
-    status: "error",
-    message: "Endpoint tidak ditemukan",
-    data: null
-  });
+    res.status(404).json({
+        status: "error",
+        message: "Endpoint tidak ditemukan",
+        data: null
+    });
 });
 
 const PORT = process.env.PORT || 3000;
