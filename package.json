@@ -1,0 +1,30 @@
+{
+  "name": "tugas1-restful-2428240159_kurniawan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kurniawan2428240159-lang/tugas1-restful-2428240159_Kurniawan.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kurniawan2428240159-lang/tugas1-restful-2428240159_Kurniawan/issues"
+  },
+  "homepage": "https://github.com/kurniawan2428240159-lang/tugas1-restful-2428240159_Kurniawan#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
+
+
