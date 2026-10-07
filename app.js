@@ -113,6 +113,33 @@ app.delete('/skincare-products/:id', (req, res) => {
     });
 });
 
+app.put('/skincare-products/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const index = skincareProducts.findIndex(p => p.id === id);
+    if (index === -1) {
+        return res.status(404).json({
+            status: "error",
+            message: `Data dengan id ${id} tidak ditemukan`,
+            data: null
+        });
+    }
+
+    const { nama, merek, jenisKulit, harga, nomorBpom } = req.body;
+    skincareProducts[index] = {
+        ...skincareProducts[index],
+        nama: nama || skincareProducts[index].nama,
+        merek: merek || skincareProducts[index].merek,
+        jenisKulit: jenisKulit || skincareProducts[index].jenisKulit,
+        harga: harga || skincareProducts[index].harga,
+        nomorBpom: nomorBpom || skincareProducts[index].nomorBpom
+    };
+    res.status(200).json({
+        status: "success",
+        message: `Data skincare dengan id ${id} berhasil diperbarui`,
+        data: skincareProducts[index]
+    });
+});
+
 app.use((req, res) => {
     res.status(404).json({
         status: "error",
